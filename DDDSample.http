@@ -1,0 +1,9 @@
+@DDDSample_HostAddress = http://localhost:5241
+
+GET {{DDDSample_HostAddress}}/api/Members/
+Accept: application/json
+
+###
+
+GET {{DDDSample_HostAddress}}/api/orders/
+Accept: application/json
