@@ -1,56 +1,45 @@
+using AutoMapper;
 using DDDSample.Domain.Entities;
-using DDDSample.Application.DTOs;
 using DDDSample.Domain.Repositories;
+using DDDSample.Application.DTOs;
 
 namespace DDDSample.Application.Services;
 
 public class OrderService
 {
     private readonly IOrderRepository _repository;
+    private readonly IMapper _mapper;
 
-    public OrderService(IOrderRepository repository)
+    public OrderService(IOrderRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<OrderDto>> GetAllAsync()
     {
         var orders = await _repository.GetAllAsync();
-        return orders.Select(o => new OrderDto
-        {
-            Id = o.Id,
-            OrderNumber = o.OrderNumber,
-            OrderDate = o.OrderDate,
-            MemberId = o.MemberId
-        });
+        return _mapper.Map<IEnumerable<OrderDto>>(orders);
     }
 
     public async Task<OrderDto?> GetByIdAsync(int id)
     {
         var order = await _repository.GetByIdAsync(id);
-        if (order == null) return null;
-        return new OrderDto
-        {
-            Id = order.Id,
-            OrderNumber = order.OrderNumber,
-            OrderDate = order.OrderDate,
-            MemberId = order.MemberId
-        };
+        return order == null ? null : _mapper.Map<OrderDto>(order);
     }
 
     public async Task<OrderDto> AddAsync(OrderDto dto)
     {
-        var order = new Order(dto.OrderNumber, dto.OrderDate, dto.MemberId);
+        var order = _mapper.Map<Order>(dto);
         await _repository.AddAsync(order);
-        dto.Id = order.Id;
-        return dto;
+        return _mapper.Map<OrderDto>(order);
     }
 
     public async Task<bool> UpdateAsync(int id, OrderDto dto)
     {
         var order = await _repository.GetByIdAsync(id);
         if (order == null) return false;
-        order.Update(dto.OrderNumber, dto.OrderDate, dto.MemberId);
+        _mapper.Map(dto, order);
         await _repository.UpdateAsync(order);
         return true;
     }

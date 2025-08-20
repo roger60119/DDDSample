@@ -2,12 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using DDDSample.Application.Services;
 using DDDSample.Domain.Repositories;
 using DDDSample.Infrastructure.Data;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 註冊 MyDbContext，請將 "YourConnectionString" 替換為實際連線字串
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 註冊 AutoMapper，會自動載入所有 Profile
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Add services to the container.
 

@@ -1,3 +1,4 @@
+using AutoMapper;
 using DDDSample.Domain.Entities;
 using DDDSample.Domain.Repositories;
 using DDDSample.Application.DTOs;
@@ -7,38 +8,39 @@ namespace DDDSample.Application.Services;
 public class MemberService
 {
     private readonly IMemberRepository _repository;
+    private readonly IMapper _mapper;
 
-    public MemberService(IMemberRepository repository)
+    public MemberService(IMemberRepository repository, IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MemberDto>> GetAllAsync()
     {
         var members = await _repository.GetAllAsync();
-        return members.Select(m => new MemberDto { Id = m.Id, Name = m.Name, Mail = m.Mail });
+        return _mapper.Map<IEnumerable<MemberDto>>(members);
     }
 
     public async Task<MemberDto?> GetByIdAsync(int id)
     {
         var member = await _repository.GetByIdAsync(id);
-        if (member == null) return null;
-        return new MemberDto { Id = member.Id, Name = member.Name, Mail = member.Mail };
+        return member == null ? null : _mapper.Map<MemberDto>(member);
     }
 
     public async Task<MemberDto> AddAsync(MemberDto dto)
     {
-        var member = new Member(dto.Name, dto.Mail);
+        var member = _mapper.Map<Member>(dto);
         await _repository.AddAsync(member);
-        dto.Id = member.Id;
-        return dto;
+        return _mapper.Map<MemberDto>(member);
     }
 
     public async Task<bool> UpdateAsync(int id, MemberDto dto)
     {
         var member = await _repository.GetByIdAsync(id);
         if (member == null) return false;
-        member.Update(dto.Name, dto.Mail);
+        // 將 dto 的值映射到已存在的 member 實体
+        _mapper.Map(dto, member);
         await _repository.UpdateAsync(member);
         return true;
     }
