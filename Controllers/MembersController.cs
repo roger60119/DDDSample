@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DDDSample.Application.Services;
+using MediatR;
 using DDDSample.Application.DTOs;
 
 namespace DDDSample.Controllers;
@@ -8,21 +8,21 @@ namespace DDDSample.Controllers;
 [ApiController]
 public class MembersController : ControllerBase
 {
-    private readonly MemberService _service;
+    private readonly IMediator _mediator;
 
-    public MembersController(MemberService service)
+    public MembersController(IMediator mediator)
     {
-        _service = service;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetMembers()
-        => Ok(await _service.GetAllAsync());
+        => Ok(await _mediator.Send(new GetAllMembersQuery()));
 
     [HttpGet("{id}")]
     public async Task<ActionResult<MemberDto>> GetMember(int id)
     {
-        var member = await _service.GetByIdAsync(id);
+        var member = await _mediator.Send(new GetMemberByIdQuery(id));
         if (member == null) return NotFound();
         return Ok(member);
     }
@@ -30,7 +30,7 @@ public class MembersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<MemberDto>> PostMember(MemberDto dto)
     {
-        var created = await _service.AddAsync(dto);
+        var created = await _mediator.Send(new CreateMemberCommand(dto));
         return CreatedAtAction(nameof(GetMember), new { id = created.Id }, created);
     }
 
@@ -38,7 +38,7 @@ public class MembersController : ControllerBase
     public async Task<IActionResult> PutMember(int id, MemberDto dto)
     {
         if (id != dto.Id) return BadRequest();
-        var updated = await _service.UpdateAsync(id, dto);
+        var updated = await _mediator.Send(new UpdateMemberCommand(id, dto));
         if (!updated) return NotFound();
         return NoContent();
     }
@@ -46,7 +46,7 @@ public class MembersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMember(int id)
     {
-        var deleted = await _service.DeleteAsync(id);
+        var deleted = await _mediator.Send(new DeleteMemberCommand(id));
         if (!deleted) return NotFound();
         return NoContent();
     }
