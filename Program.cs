@@ -2,6 +2,7 @@ using DDDSample.Application.Services;
 using DDDSample.Domain.Repositories;
 using DDDSample.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,15 @@ builder.Services.AddScoped<OrderService>();
 // 註冊 MediatR，指定 Handler 所在的組件
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
+// NLog 設定
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
 var app = builder.Build();
+
+// 註冊自訂 Middleware
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
