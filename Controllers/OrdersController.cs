@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using DDDSample.Application.DTOs;
-using DDDSample.Application.Services;
 
 namespace DDDSample.Controllers;
 
@@ -8,21 +8,21 @@ namespace DDDSample.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly OrderService _service;
+    private readonly IMediator _mediator;
 
-    public OrdersController(OrderService service)
+    public OrdersController(IMediator mediator)
     {
-        _service = service;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrders()
-        => Ok(await _service.GetAllAsync());
+        => Ok(await _mediator.Send(new GetAllOrdersQuery()));
 
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderDto>> GetOrder(int id)
     {
-        var order = await _service.GetByIdAsync(id);
+        var order = await _mediator.Send(new GetOrderByIdQuery(id));
         if (order == null) return NotFound();
         return Ok(order);
     }
@@ -30,7 +30,7 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<OrderDto>> PostOrder(OrderDto dto)
     {
-        var created = await _service.AddAsync(dto);
+        var created = await _mediator.Send(new CreateOrderCommand(dto));
         return CreatedAtAction(nameof(GetOrder), new { id = created.Id }, created);
     }
 
@@ -38,7 +38,7 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> PutOrder(int id, OrderDto dto)
     {
         if (id != dto.Id) return BadRequest();
-        var updated = await _service.UpdateAsync(id, dto);
+        var updated = await _mediator.Send(new UpdateOrderCommand(id, dto));
         if (!updated) return NotFound();
         return NoContent();
     }
@@ -46,7 +46,7 @@ public class OrdersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteOrder(int id)
     {
-        var deleted = await _service.DeleteAsync(id);
+        var deleted = await _mediator.Send(new DeleteOrderCommand(id));
         if (!deleted) return NotFound();
         return NoContent();
     }
