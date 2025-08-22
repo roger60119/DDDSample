@@ -7,14 +7,27 @@ namespace DDDSample.Infrastructure.Repositories;
 public class MemberRepository : IMemberRepository
 {
     private readonly MyDbContext _context;
+    private readonly IRedisCacheService _cacheService;
 
-    public MemberRepository(MyDbContext context)
+    public MemberRepository(MyDbContext context, IRedisCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task<IEnumerable<Member>> GetAllAsync()
-        => await _context.Members.AsNoTracking().ToListAsync();
+    {
+        // Check cache first
+        if (_cacheService.Exists("members"))
+        {
+            return _cacheService.Get<IEnumerable<Member>>("members");
+        }
+        // If not in cache, fetch from database
+        var members = await _context.Members.AsNoTracking().ToListAsync();
+        // Store in cache
+        _cacheService.Set("members", members);
+        return members;
+    }
 
     public async Task<Member?> GetByIdAsync(int id)
         => await _context.Members.FindAsync(id);
