@@ -22,7 +22,7 @@ public class OrderService
         return _mapper.Map<IEnumerable<OrderDto>>(orders);
     }
 
-    public async Task<OrderDto?> GetByIdAsync(int id)
+    public async Task<OrderDto?> GetByIdAsync(long id)
     {
         var order = await _repository.GetByIdAsync(id);
         return order == null ? null : _mapper.Map<OrderDto>(order);
@@ -35,7 +35,7 @@ public class OrderService
         return _mapper.Map<OrderDto>(order);
     }
 
-    public async Task<bool> UpdateAsync(int id, OrderDto dto)
+    public async Task<bool> UpdateAsync(long id, OrderDto dto)
     {
         var order = await _repository.GetByIdAsync(id);
         if (order == null) return false;
@@ -44,7 +44,7 @@ public class OrderService
         return true;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(long id)
     {
         var order = await _repository.GetByIdAsync(id);
         if (order == null) return false;

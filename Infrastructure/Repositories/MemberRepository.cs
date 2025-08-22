@@ -2,7 +2,7 @@ using DDDSample.Domain.Entities;
 using DDDSample.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace DDDSample.Infrastructure.Data;
+namespace DDDSample.Infrastructure.Repositories;
 
 public class MemberRepository : IMemberRepository
 {

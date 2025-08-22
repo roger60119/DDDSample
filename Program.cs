@@ -1,12 +1,11 @@
 using DDDSample.Application.Services;
 using DDDSample.Domain.Repositories;
-using DDDSample.Infrastructure.Data;
+using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 註冊 MyDbContext，請將 "YourConnectionString" 替換為實際連線字串
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

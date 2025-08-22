@@ -20,7 +20,7 @@ public class OrdersController : ControllerBase
         => Ok(await _mediator.Send(new GetAllOrdersQuery()));
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<OrderDto>> GetOrder(int id)
+    public async Task<ActionResult<OrderDto>> GetOrder(long id)
     {
         var order = await _mediator.Send(new GetOrderByIdQuery(id));
         if (order == null) return NotFound();
@@ -31,20 +31,20 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult<OrderDto>> PostOrder(OrderDto dto)
     {
         var created = await _mediator.Send(new CreateOrderCommand(dto));
-        return CreatedAtAction(nameof(GetOrder), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetOrder), new { id = created.OrderId }, created);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutOrder(int id, OrderDto dto)
+    public async Task<IActionResult> PutOrder(long id, OrderDto dto)
     {
-        if (id != dto.Id) return BadRequest();
+        if (id != dto.OrderId) return BadRequest();
         var updated = await _mediator.Send(new UpdateOrderCommand(id, dto));
         if (!updated) return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteOrder(int id)
+    public async Task<IActionResult> DeleteOrder(long id)
     {
         var deleted = await _mediator.Send(new DeleteOrderCommand(id));
         if (!deleted) return NotFound();

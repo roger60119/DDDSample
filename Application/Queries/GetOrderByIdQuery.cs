@@ -1,4 +1,4 @@
 using MediatR;
 using DDDSample.Application.DTOs;
 
-public record GetOrderByIdQuery(int Id) : IRequest<OrderDto?>;
+public record GetOrderByIdQuery(long Id) : IRequest<OrderDto?>;

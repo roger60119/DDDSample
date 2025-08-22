@@ -1,3 +1,3 @@
 using MediatR;
 
-public record DeleteOrderCommand(int Id) : IRequest<bool>;
+public record DeleteOrderCommand(long Id) : IRequest<bool>;

@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\Services\" />
-    <Folder Include="ExportedData\" />
   </ItemGroup>
 
 </Project>
