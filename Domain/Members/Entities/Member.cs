@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DDDSample.Domain.Entities;
+namespace DDDSample.Domain.Members.Entities;
 
 public class Member
 {

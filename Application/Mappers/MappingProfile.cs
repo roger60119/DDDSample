@@ -1,6 +1,6 @@
 using AutoMapper;
-using DDDSample.Domain.Entities;
 using DDDSample.Application.DTOs;
+using DDDSample.Domain.Members.Entities;
 
 public class MappingProfile : Profile
 {

@@ -1,5 +1,5 @@
-using DDDSample.Application.Services;
-using DDDSample.Domain.Repositories;
+using DDDSample.Domain.Members.Repositories;
+using DDDSample.Infrastructure.Common;
 using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web;
@@ -19,15 +19,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<MemberService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<OrderService>();
 // 註冊 MediatR，指定 Handler 所在的組件
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 // NLog 設定
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
+
+//Redis 設定
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+});
+builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
 var app = builder.Build();
 

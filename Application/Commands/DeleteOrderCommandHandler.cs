@@ -1,5 +1,5 @@
 using MediatR;
-using DDDSample.Domain.Repositories;
+using DDDSample.Domain.Members.Repositories;
 
 public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, bool>
 {

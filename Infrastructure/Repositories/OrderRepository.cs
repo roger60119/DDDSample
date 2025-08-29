@@ -1,5 +1,6 @@
-using DDDSample.Domain.Entities;
-using DDDSample.Domain.Repositories;
+using DDDSample.Domain.Members.Entities;
+using DDDSample.Domain.Members.Repositories;
+using DDDSample.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace DDDSample.Infrastructure.Repositories;

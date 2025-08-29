@@ -1,6 +1,6 @@
-using DDDSample.Domain.Entities;
+using DDDSample.Domain.Members.Entities;
 
-namespace DDDSample.Domain.Repositories;
+namespace DDDSample.Domain.Members.Repositories;
 
 public interface IMemberRepository
 {

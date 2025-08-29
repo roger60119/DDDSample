@@ -1,7 +1,7 @@
-﻿using DDDSample.Domain.Entities;
+﻿using DDDSample.Domain.Members.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DDDSample.Infrastructure.Repositories;
+namespace DDDSample.Infrastructure.Common;
 
 public partial class MyDbContext : DbContext
 {
