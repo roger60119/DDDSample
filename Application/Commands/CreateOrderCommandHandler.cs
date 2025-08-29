@@ -1,8 +1,8 @@
 using MediatR;
-using DDDSample.Domain.Repositories;
 using AutoMapper;
-using DDDSample.Domain.Entities;
 using DDDSample.Application.DTOs;
+using DDDSample.Domain.Members.Entities;
+using DDDSample.Domain.Members.Repositories;
 
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderDto>
 {

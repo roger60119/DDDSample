@@ -1,10 +1,8 @@
-using DDDSample.Application.Services;
-using DDDSample.Domain.Repositories;
+using DDDSample.Domain.Members.Repositories;
+using DDDSample.Infrastructure.Common;
 using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NLog.Web;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +19,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<MemberService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<OrderService>();
 // 註冊 MediatR，指定 Handler 所在的組件
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 

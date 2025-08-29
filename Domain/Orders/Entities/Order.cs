@@ -1,4 +1,4 @@
-﻿namespace DDDSample.Domain.Entities;
+﻿namespace DDDSample.Domain.Members.Entities;
 
 public class Order
 {
