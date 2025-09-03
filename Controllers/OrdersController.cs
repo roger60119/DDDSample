@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using DDDSample.Application.DTOs;
+using DDDSample.Attributes;
 
 namespace DDDSample.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[ApiKeyAuth]
 public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -32,15 +34,6 @@ public class OrdersController : ControllerBase
     {
         var created = await _mediator.Send(new CreateOrderCommand(dto));
         return CreatedAtAction(nameof(GetOrder), new { id = created.OrderId }, created);
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutOrder(long id, OrderDto dto)
-    {
-        if (id != dto.OrderId) return BadRequest();
-        var updated = await _mediator.Send(new UpdateOrderCommand(id, dto));
-        if (!updated) return NotFound();
-        return NoContent();
     }
 
     [HttpDelete("{id}")]

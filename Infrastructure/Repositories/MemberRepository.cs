@@ -26,7 +26,7 @@ public class MemberRepository : IMemberRepository
         // If not in cache, fetch from database
         var members = await _context.Members.AsNoTracking().ToListAsync();
         // Store in cache
-        _cacheService.Set("members", members);
+        _cacheService.Set("members", members, TimeSpan.FromMinutes(15));
         return members;
     }
 
