@@ -5,7 +5,7 @@ namespace DDDSample.Domain.Members.Entities;
 
 public class Member
 {
-    public int Id { get; private set; }
+    public int Id { get; init; }
     public string Name { get; private set; }
     public string Mail { get; private set; }
 

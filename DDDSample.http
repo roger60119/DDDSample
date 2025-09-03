@@ -2,8 +2,10 @@
 
 GET {{DDDSample_HostAddress}}/api/Members/
 Accept: application/json
+X-API-Key: abc12345
 
 ###
 
 GET {{DDDSample_HostAddress}}/api/orders/
 Accept: application/json
+X-API-Key: abc12345

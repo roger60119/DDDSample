@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using DDDSample.Application.DTOs;
+using DDDSample.Attributes;
 
 namespace DDDSample.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[ApiKeyAuth]
 public class MembersController : ControllerBase
 {
     private readonly IMediator _mediator;

@@ -2,20 +2,34 @@ using DDDSample.Domain.Members.Entities;
 using DDDSample.Domain.Members.Repositories;
 using DDDSample.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace DDDSample.Infrastructure.Repositories;
 
 public class OrderRepository : IOrderRepository
 {
     private readonly MyDbContext _context;
+    private readonly IRedisCacheService _cacheService;
 
-    public OrderRepository(MyDbContext context)
+    public OrderRepository(MyDbContext context, IRedisCacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task<IEnumerable<Order>> GetAllAsync()
-        => await _context.Orders.AsNoTracking().ToListAsync();
+    {
+        // Check cache first
+        if (_cacheService.Exists("orders"))
+        {
+            return _cacheService.Get<IEnumerable<Order>>("orders");
+        }
+        // If not in cache, fetch from database
+        var orders = await _context.Orders.AsNoTracking().ToListAsync();
+        // Store in cache
+        _cacheService.Set("orders", orders, TimeSpan.FromMinutes(15));
+        return orders;
+    }
 
     public async Task<Order?> GetByIdAsync(long id)
         => await _context.Orders.FindAsync(id);
