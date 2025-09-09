@@ -27,11 +27,11 @@ internal class RedisCacheService : IRedisCacheService
         return _cache.Get(key) != null;
     }
 
-    public T Get<T>(string key) where T : class
+    public async Task<T> GetAsync<T>(string key) where T : class
     {
         _logger.LogInformation($"Attempting to retrieve key '{key}' from cache.");
 
-        var value = _cache.Get(key) ?? throw new KeyNotFoundException($"Key '{key}' not found in cache.");
+        var value = await _cache.GetAsync(key) ?? throw new KeyNotFoundException($"Key '{key}' not found in cache.");
 
         try
         {
@@ -43,18 +43,18 @@ internal class RedisCacheService : IRedisCacheService
         }
     }
 
-    public void Remove(string key)
+    public async void RemoveAsync(string key)
     {
         _logger.LogInformation($"Removing key '{key}' from cache.");
 
-        _cache.Remove(key);
+        await _cache.RemoveAsync(key);
     }
 
-    public void Set<T>(string key, T value, TimeSpan? expiration = null) where T : class
+    public async void SetAsync<T>(string key, T value, TimeSpan? expiration = null) where T : class
     {
         _logger.LogInformation($"Setting key '{key}' in cache with expiration of {expiration?.TotalMinutes ?? 60} minutes.");
 
-        _cache.Set(
+        await _cache.SetAsync(
             key,
             JsonSerializer.SerializeToUtf8Bytes(value, _jsonOptions),
             new DistributedCacheEntryOptions

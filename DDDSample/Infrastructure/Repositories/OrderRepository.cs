@@ -22,12 +22,12 @@ public class OrderRepository : IOrderRepository
         // Check cache first
         if (_cacheService.Exists("orders"))
         {
-            return _cacheService.Get<IEnumerable<Order>>("orders");
+            return await _cacheService.GetAsync<IEnumerable<Order>>("orders");
         }
         // If not in cache, fetch from database
         var orders = await _context.Orders.AsNoTracking().ToListAsync();
         // Store in cache
-        _cacheService.Set("orders", orders, TimeSpan.FromMinutes(15));
+        _cacheService.SetAsync("orders", orders, TimeSpan.FromMinutes(15));
         return orders;
     }
 

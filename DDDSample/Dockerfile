@@ -4,6 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
+RUN mkdir -p /app/logs
 EXPOSE 8080
 EXPOSE 8081
 
@@ -27,4 +28,6 @@ RUN dotnet publish "./DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN apt-get update && apt-get install -y tzdata
+ENV TZ=Asia/Taipei
 ENTRYPOINT ["dotnet", "DDDSample.dll"]
