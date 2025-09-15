@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_LOGGING__LOGLEVEL__DEFAULT=Debug
       - DOTNET_USE_POLLING_FILE_WATCHER=true
-      - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=master;Integrated Security=false;User Id=sa;Password=1234;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=master;Integrated Security=false;User Id=sa;Password=abc_1234;TrustServerCertificate=True
       - ConnectionStrings__RedisConnection=redis:6379
       - ASPNETCORE_URLS=http://+:8080;https://+:8081
       - TZ=Asia/Taipei
@@ -18,7 +18,7 @@ services:
       - ./:/app/src:delegated
       - /app/src/bin
       - /app/src/obj
-      - D:/Logs/DDDSample:/app/logs
+      - C:/Logs/DDDSample:/app/logs
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -27,6 +27,7 @@ services:
     command: ["dotnet", "watch", "run", "--project", "/app/src"]
     depends_on:
       - redis
+      - sqlserver
 
   redis:
     image: redis:7.2-alpine
@@ -37,5 +38,18 @@ services:
     volumes:
       - redis_data:/data
 
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: dddsample-sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=abc_1234
+    restart: unless-stopped
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
 volumes:
   redis_data:
+  sqlserver_data:
