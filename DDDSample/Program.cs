@@ -1,9 +1,11 @@
+using Azure.Identity;
 using DDDSample.Domain.Members.Repositories;
 using DDDSample.Infrastructure.Common;
 using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,10 +51,31 @@ builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
 //Redis ³]©w
+// Check the environment variable for the Redis cache host name
+var cacheHostName = Environment.GetEnvironmentVariable("AZURE_REDIS_HOST");
+if (string.IsNullOrEmpty(cacheHostName))
+{
+    throw new InvalidOperationException("The environment variable 'AZURE_REDIS_HOST' is not set.");
+}
+
+var configurationOptions = ConfigurationOptions.Parse($"{cacheHostName}:6380");
+
+// For system-assigned identity.
+// In the Azure portal, we need to set up Redis service to grant Contributor access to the system-assigned identity
+// for the container app that hosts this Web API service.
+await configurationOptions.ConfigureForAzureWithTokenCredentialAsync(new DefaultAzureCredential());
+
+var connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(configurationOptions);
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+    options.ConfigurationOptions = configurationOptions;
 });
+
+//builder.Services.AddStackExchangeRedisCache(options =>
+//{
+//    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+//});
 builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

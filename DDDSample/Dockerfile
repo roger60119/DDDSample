@@ -13,21 +13,22 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["DDDSample.csproj", "."]
-RUN dotnet restore "./DDDSample.csproj"
+COPY ["DDDSample/DDDSample.csproj", "DDDSample/"]
+RUN dotnet restore "DDDSample/DDDSample.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "DDDSample/DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # 此階段可用來發佈要複製到最終階段的服務專案
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DDDSample/DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # 此階段用於生產環境，或以一般模式從 VS 執行時 (未使用偵錯設定時的預設值)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN apt-get update && apt-get install -y tzdata
+#RUN apt-get update && apt-get install -y tzdata
 ENV TZ=Asia/Taipei
+ENV AZURE_REDIS_HOST dddsample.redis.cache.windows.net
 ENTRYPOINT ["dotnet", "DDDSample.dll"]
