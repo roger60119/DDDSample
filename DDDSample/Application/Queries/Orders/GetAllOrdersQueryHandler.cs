@@ -1,7 +1,7 @@
 using MediatR;
 using AutoMapper;
 using DDDSample.Application.DTOs;
-using DDDSample.Domain.Members.Repositories;
+using DDDSample.Domain.Orders.Repositories;
 
 public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, IEnumerable<OrderDto>>
 {

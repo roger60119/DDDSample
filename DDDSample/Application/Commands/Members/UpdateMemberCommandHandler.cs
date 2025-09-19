@@ -3,6 +3,8 @@ using AutoMapper;
 using DDDSample.Application.DTOs;
 using DDDSample.Domain.Members.Repositories;
 
+namespace DDDSample.Application.Commands.Members;
+
 public class UpdateMemberCommandHandler : IRequestHandler<UpdateMemberCommand, bool>
 {
     private readonly IMemberRepository _repository;

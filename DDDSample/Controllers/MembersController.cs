@@ -2,6 +2,7 @@
 using MediatR;
 using DDDSample.Application.DTOs;
 using DDDSample.Attributes;
+using DDDSample.Application.Commands.Members;
 
 namespace DDDSample.Controllers;
 

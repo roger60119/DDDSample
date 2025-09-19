@@ -4,6 +4,8 @@ using DDDSample.Application.DTOs;
 using DDDSample.Domain.Members.Entities;
 using DDDSample.Domain.Members.Repositories;
 
+namespace DDDSample.Application.Commands.Members;
+
 public class CreateMemberCommandHandler : IRequestHandler<CreateMemberCommand, MemberDto>
 {
     private readonly IMemberRepository _repository;

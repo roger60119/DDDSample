@@ -1,5 +1,5 @@
-using DDDSample.Domain.Members.Entities;
-using DDDSample.Domain.Members.Repositories;
+using DDDSample.Domain.Orders.Entities;
+using DDDSample.Domain.Orders.Repositories;
 using DDDSample.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;

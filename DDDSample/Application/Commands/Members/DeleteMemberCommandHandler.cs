@@ -1,6 +1,8 @@
 using MediatR;
 using DDDSample.Domain.Members.Repositories;
 
+namespace DDDSample.Application.Commands.Members;
+
 public class DeleteMemberCommandHandler : IRequestHandler<DeleteMemberCommand, bool>
 {
     private readonly IMemberRepository _repository;

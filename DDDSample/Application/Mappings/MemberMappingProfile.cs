@@ -2,11 +2,12 @@ using AutoMapper;
 using DDDSample.Application.DTOs;
 using DDDSample.Domain.Members.Entities;
 
-public class MappingProfile : Profile
+namespace DDDSample.Application.Mappings;
+
+public class MemberMappingProfile : Profile
 {
-    public MappingProfile()
+    public MemberMappingProfile()
     {
         CreateMap<Member, MemberDto>().ReverseMap();
-        CreateMap<Order, OrderDto>().ReverseMap();
     }
 }

@@ -1,4 +1,7 @@
+using DDDSample.Application.Mappings;
 using DDDSample.Domain.Members.Repositories;
+using DDDSample.Domain.Orders.Repositories;
+using DDDSample.Domain.Products.Repositories;
 using DDDSample.Infrastructure.Common;
 using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +14,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 註冊 AutoMapper，會自動載入所有 Profile
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(MappingProfile)));
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(MemberMappingProfile)));
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(OrderMappingProfile)));
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(ProductMappingProfile)));
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -41,6 +46,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 // 註冊 MediatR，指定 Handler 所在的組件
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 

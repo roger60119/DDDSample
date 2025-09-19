@@ -1,6 +1,6 @@
-using DDDSample.Domain.Members.Entities;
+using DDDSample.Domain.Orders.Entities;
 
-namespace DDDSample.Domain.Members.Repositories;
+namespace DDDSample.Domain.Orders.Repositories;
 
 public interface IOrderRepository
 {

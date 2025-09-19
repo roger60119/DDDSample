@@ -16,7 +16,7 @@ WORKDIR /src
 COPY ["DDDSample.csproj", "."]
 RUN dotnet restore "./DDDSample.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src"
 RUN dotnet build "./DDDSample.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # 此階段可用來發佈要複製到最終階段的服務專案
