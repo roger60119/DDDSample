@@ -17,7 +17,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Unhandled exception occurred while processing request: {context.Request.Method} {context.Request.Path}, error: {ex.Message}");
+            _logger.LogError(ex, $"Unhandled exception occurred while processing request: {context.Request.Method} {context.Request.Path}, error: {ex.Message}, trace: {ex.StackTrace}");
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync("{\"error\":\"Internal Server Error\"}");

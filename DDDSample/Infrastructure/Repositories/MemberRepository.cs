@@ -37,7 +37,7 @@ public class MemberRepository : IMemberRepository
         if (_cacheService.Exists("members"))
         {
             var members = await _cacheService.GetAsync<IEnumerable<Member>>("members");
-            return members.FirstOrDefault(m => m.Id == id);
+            return members.FirstOrDefault(m => m.MemberId == id);
         }
         return await _context.Members.FindAsync(id);
     }
@@ -65,5 +65,5 @@ public class MemberRepository : IMemberRepository
     }
 
     public async Task<bool> ExistsAsync(int id)
-        => await _context.Members.AnyAsync(e => e.Id == id);
+        => await _context.Members.AnyAsync(e => e.MemberId == id);
 }

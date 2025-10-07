@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DDDSample.Domain.Members.Enumerations;
 
 namespace DDDSample.Domain.Members.Entities;
 
 public class Member
 {
-    public int Id { get; init; }
-    public string Name { get; private set; }
-    public string Mail { get; private set; }
-
-    public Member(string name, string mail)
-    {
-        Name = name;
-        Mail = mail;
-    }
-
-    public void Update(string name, string mail)
-    {
-        Name = name;
-        Mail = mail;
-    }
+    public int MemberId { get; init; }
+    public required string Name { get; set; }
+    public required string Mail { get; set; }
+    public required string MobilePhone { get; set; }
+    public Gender Gender { get; set; }
+    public string? BirthDate { get; set; }
 }

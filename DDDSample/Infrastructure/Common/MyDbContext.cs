@@ -24,10 +24,8 @@ public partial class MyDbContext : DbContext
     {
         modelBuilder.Entity<Member>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__tmp_ms_x__3214EC07B1AA2327");
+            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
 
-            entity.Property(e => e.Mail).HasMaxLength(100);
-            entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -50,4 +48,13 @@ public partial class MyDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Modified))
+        {
+            entry.Property("UpdatedDate").CurrentValue = DateTime.UtcNow;
+        }
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }

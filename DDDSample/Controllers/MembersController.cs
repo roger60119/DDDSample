@@ -34,13 +34,13 @@ public class MembersController : ControllerBase
     public async Task<ActionResult<MemberDto>> PostMember(MemberDto dto)
     {
         var created = await _mediator.Send(new CreateMemberCommand(dto));
-        return CreatedAtAction(nameof(GetMember), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetMember), new { id = created.MemberId }, created);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutMember(int id, MemberDto dto)
     {
-        if (id != dto.Id) return BadRequest();
+        if (id != dto.MemberId) return BadRequest();
         var updated = await _mediator.Send(new UpdateMemberCommand(id, dto));
         if (!updated) return NotFound();
         return NoContent();
