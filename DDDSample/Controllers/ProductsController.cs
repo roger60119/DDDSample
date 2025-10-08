@@ -35,13 +35,13 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductDto>> PostProduct(ProductDto dto)
     {
         var created = await _mediator.Send(new CreateProductCommand(dto));
-        return CreatedAtAction(nameof(GetProduct), new { id = created.Id }, created);
+        return CreatedAtAction(nameof(GetProduct), new { id = created.ProductId }, created);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutProduct(int id, ProductDto dto)
     {
-        if (id != dto.Id) return BadRequest();
+        if (id != dto.ProductId) return BadRequest();
         var updated = await _mediator.Send(new UpdateProductCommand(id, dto));
         if (!updated) return NotFound();
         return NoContent();
@@ -52,6 +52,14 @@ public class ProductsController : ControllerBase
     {
         var deleted = await _mediator.Send(new DeleteProductCommand(id));
         if (!deleted) return NotFound();
+        return NoContent();
+    }
+
+    [HttpPut("{id}/stock")]
+    public async Task<IActionResult> UpdateStock(int id, int stock)
+    {
+        var updated = await _mediator.Send(new UpdateProductStockCommand(id, stock));
+        if (!updated) return NotFound();
         return NoContent();
     }
 }

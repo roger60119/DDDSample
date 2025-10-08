@@ -25,23 +25,16 @@ public partial class MyDbContext : DbContext
         modelBuilder.Entity<Member>(entity =>
         {
             entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
-
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCF6E91BDA7");
-
-            entity.Property(e => e.OrderDate).HasColumnType("datetime");
+            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id);
-
-            entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
         });
 
         OnModelCreatingPartial(modelBuilder);

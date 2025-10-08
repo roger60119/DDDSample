@@ -32,10 +32,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> GetByIdAsync(int id)
     {
-        if (_cacheService.Exists("products"))
+        var cacheKey = $"product_{id}";
+        if (_cacheService.Exists(cacheKey))
         {
-            var products = await _cacheService.GetAsync<IEnumerable<Product>>("products");
-            return products.FirstOrDefault(p => p.Id == id);
+            return await _cacheService.GetAsync<Product>(cacheKey);
         }
         return await _context.Products.FindAsync(id);
     }
@@ -44,23 +44,23 @@ public class ProductRepository : IProductRepository
     {
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
-        _cacheService.RemoveAsync("products");
+        _cacheService.RemoveAsync($"product_{product.ProductId}");
     }
 
     public async Task UpdateAsync(Product product)
     {
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
-        _cacheService.RemoveAsync("products");
+        _cacheService.RemoveAsync($"product_{product.ProductId}");
     }
 
     public async Task DeleteAsync(Product product)
     {
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
-        _cacheService.RemoveAsync("products");
+        _cacheService.RemoveAsync($"product_{product.ProductId}");
     }
 
     public async Task<bool> ExistsAsync(int id)
-        => await _context.Products.AnyAsync(e => e.Id == id);
+        => await _context.Products.AnyAsync(e => e.ProductId == id);
 }
