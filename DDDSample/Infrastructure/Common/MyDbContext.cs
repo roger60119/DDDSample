@@ -19,6 +19,7 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<Member> Members { get; set; }
     public virtual DbSet<Order> Orders { get; set; }
     public virtual DbSet<Product> Products { get; set; }
+    public virtual DbSet<OrderItem> OrderItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,14 +28,22 @@ public partial class MyDbContext : DbContext
             entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
         });
 
-        modelBuilder.Entity<Order>(entity =>
+        modelBuilder.Entity<Product>(entity =>
         {
             entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
         });
 
-        modelBuilder.Entity<Product>(entity =>
+        modelBuilder.Entity<OrderItem>(entity =>
         {
-            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
+            entity.HasKey(e => e.OrderItemId);
+
+            entity.HasOne<Order>()
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(e => e.OrderId);
+
+            entity.HasOne(e => e.Product)
+                .WithMany()
+                .HasForeignKey(e => e.ProductId);
         });
 
         OnModelCreatingPartial(modelBuilder);
