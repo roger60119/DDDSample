@@ -46,7 +46,7 @@ public class OrderRepository : IOrderRepository
         // 確保 OrderItems 只關聯 ProductId
         foreach (var item in order.OrderItems)
         {
-            item.Product = null;
+            item.Product = null!;
         }
         _context.Orders.Add(order);
         await _context.SaveChangesAsync();

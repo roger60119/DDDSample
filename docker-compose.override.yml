@@ -1,14 +1,45 @@
 services:
   dddsample:
+    build:
+      context: .
+      dockerfile: ./DDDSample/Dockerfile
+    command: ["dotnet", "watch", "run", "--project", "/app/DDDSample"]
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - TZ=Asia/Taipei
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./DDDSample:/app/DDDSample:delegated
+      - C:/Logs/DDDSample:/app/logs
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - redis
+      - sqlserver
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: dddsample-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: dddsample-sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=abc_1234
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  redis_data:
+  sqlserver_data:
