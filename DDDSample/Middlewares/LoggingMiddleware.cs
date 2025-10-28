@@ -1,4 +1,4 @@
-using System.Text;
+ï»¿using System.Text;
 
 public class LoggingMiddleware
 {
@@ -15,7 +15,7 @@ public class LoggingMiddleware
     {
         if (context.Request.Path.StartsWithSegments("/api"))
         {
-            // ¬ö¿ı Request
+            // ç´€éŒ„ Request
             context.Request.EnableBuffering();
             var requestBody = await new StreamReader(context.Request.Body, Encoding.UTF8, leaveOpen: true).ReadToEndAsync();
             context.Request.Body.Position = 0;
@@ -23,12 +23,12 @@ public class LoggingMiddleware
         }
         else
         {
-            // ¦pªG¤£¬O API ¸ô®|¡Aª½±µ©I¥s¤U¤@­Ó Middleware
+            // å¦‚æœä¸æ˜¯ API è·¯å¾‘ï¼Œç›´æ¥å‘¼å«ä¸‹ä¸€å€‹ Middleware
             await _next(context);
             return;
         }
 
-        // ¬ö¿ı Response
+        // ç´€éŒ„ Response
         var originalBodyStream = context.Response.Body;
         using var responseBody = new MemoryStream();
         context.Response.Body = responseBody;

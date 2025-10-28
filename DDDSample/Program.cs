@@ -1,4 +1,4 @@
-using DDDSample.Application.Mappings;
+ï»¿using DDDSample.Application.Mappings;
 using DDDSample.Domain.Members.Repositories;
 using DDDSample.Domain.Orders.Repositories;
 using DDDSample.Domain.Products.Repositories;
@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// µù¥U AutoMapper¡A·|¦Û°Ê¸ü¤J©Ò¦³ Profile
+// è¨»å†Š AutoMapperï¼Œæœƒè‡ªå‹•è¼‰å…¥æ‰€æœ‰ Profile
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(MemberMappingProfile)));
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(OrderMappingProfile)));
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(ProductMappingProfile)));
@@ -47,14 +47,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-// µù¥U MediatR¡A«ü©w Handler ©Ò¦bªº²Õ¥ó
+// è¨»å†Š MediatRï¼ŒæŒ‡å®š Handler æ‰€åœ¨çš„çµ„ä»¶
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
-// NLog ³]©w
+// NLog è¨­å®š
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 
-//Redis ³]©w
+//Redis è¨­å®š
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
@@ -75,7 +75,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// µù¥U¦Û­q Middleware
+// è¨»å†Šè‡ªè¨‚ Middleware
 app.UseMiddleware<LoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 

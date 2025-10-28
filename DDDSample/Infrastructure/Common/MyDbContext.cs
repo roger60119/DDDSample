@@ -25,12 +25,12 @@ public partial class MyDbContext : DbContext
     {
         modelBuilder.Entity<Member>(entity =>
         {
-            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
+            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSUTCDATETIME()");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSDATETIME()");
+            entity.Property<DateTime>("UpdatedDate").HasDefaultValueSql("SYSUTCDATETIME()");
         });
 
         modelBuilder.Entity<OrderItem>(entity =>

@@ -5,16 +5,22 @@ services:
       dockerfile: ./DDDSample/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      - ASPNETCORE_Kestrel__Endpoints__Https__Url=https://+:8081
+      - ASPNETCORE_Kestrel__Endpoints__Https__Certificate__Path=/https/dddsample.pfx
+      - ASPNETCORE_Kestrel__Endpoints__Https__Certificate__Password=roger_12345
       - TZ=Asia/Taipei
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - redis
       - sqlserver
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - ./https:/https:ro
+
 
   redis:
     image: redis:7.2-alpine

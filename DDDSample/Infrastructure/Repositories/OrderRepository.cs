@@ -1,4 +1,4 @@
-using DDDSample.Domain.Orders.Entities;
+ï»¿using DDDSample.Domain.Orders.Entities;
 using DDDSample.Domain.Orders.Repositories;
 using DDDSample.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +43,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task AddAsync(Order order)
     {
-        // ½T«O OrderItems ¥uÃöÁp ProductId
+        // ç¢ºä¿ OrderItems åªé—œè¯ ProductId
         foreach (var item in order.OrderItems)
         {
             item.Product = null!;
@@ -55,23 +55,23 @@ public class OrderRepository : IOrderRepository
 
     public async Task UpdateAsync(Order order)
     {
-        // ¥ý¸ü¤J­ì©l­q³æ¤Î¨ä OrderItems
+        // å…ˆè¼‰å…¥åŽŸå§‹è¨‚å–®åŠå…¶ OrderItems
         var existingOrder = await _context.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
         if (existingOrder == null) return;
 
-        // §ó·s¥D¸ê®Æ
+        // æ›´æ–°ä¸»è³‡æ–™
         _context.Entry(existingOrder).CurrentValues.SetValues(order);
 
-        // ³B²z OrderItems
-        // §R°£¤£¦s¦bªº¶µ¥Ø
+        // è™•ç† OrderItems
+        // åˆªé™¤ä¸å­˜åœ¨çš„é …ç›®
         foreach (var item in existingOrder.OrderItems.ToList())
         {
             if (!order.OrderItems.Any(x => x.ProductId == item.ProductId))
                 _context.OrderItems.Remove(item);
         }
-        // ·s¼W©Î§ó·s¶µ¥Ø
+        // æ–°å¢žæˆ–æ›´æ–°é …ç›®
         foreach (var item in order.OrderItems)
         {
             var existingItem = existingOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId);
@@ -90,7 +90,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task DeleteAsync(Order order)
     {
-        // ¥ý¸ü¤J OrderItems
+        // å…ˆè¼‰å…¥ OrderItems
         var existingOrder = await _context.Orders
             .Include(o => o.OrderItems)
             .FirstOrDefaultAsync(o => o.OrderId == order.OrderId);
