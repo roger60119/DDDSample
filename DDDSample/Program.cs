@@ -7,6 +7,8 @@ using DDDSample.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
+using Hangfire;
+using DDDSample.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,12 +49,17 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IEntityChangeDetectorService, EntityChangeDetectorService>();
 // 註冊 MediatR，指定 Handler 所在的組件
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 // NLog 設定
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
+
+// Hangfire 設定
+builder.Services.AddHangfire(config => config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
 
 //Redis 設定
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -67,7 +74,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:8080","http://localhost:8081")
+                          policy.WithOrigins("http://localhost:8080", "http://localhost:8081", "https://localhost:8080", "https://localhost:8081")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
@@ -93,5 +100,12 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = [new HangfireAuthorizationFilter()]
+});
+
+BackgroundJob.Enqueue<IEntityChangeDetectorService>(service => service.ExecuteAsync());
 
 app.Run();
