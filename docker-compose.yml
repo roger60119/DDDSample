@@ -20,6 +20,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./https:/https:ro
+      - C:/Logs/DDDSample/entity_hashes.json:/app/entity_hashes.json
 
 
   redis:
